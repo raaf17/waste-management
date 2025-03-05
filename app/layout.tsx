@@ -6,16 +6,39 @@ import './globals.css'
 
 import { Toaster } from 'react-hot-toast'
 import Header from '@/components/Header'
+import Sidebar from '@/components/Sidebar'
+import { getAvailableRewards, getUserByEmail } from '@/utils/db/action'
 
 const inter = Inter({ subsets: ['latin'] })
 
 export default function RootLayout({
-  childern
-}: {
-  childern: React.ReactNode
-}) {
+  children
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [totalEarnings, setTotalEarnings] = useState(0)
+
+  useEffect(() => {
+    const fetchTotalEarnings = async () => {
+      try {
+        const userEmail = localStorage.getItem('userEmail')
+
+        if (userEmail) {
+          const user = await getUserByEmail(userEmail)
+
+          if (user) {
+            const availableRewards = await getAvailableRewards(user.id) as any
+            setTotalEarnings(availableRewards)
+          }
+        }
+      } catch (e) {
+        console.error('Error fetching total earnings: ', e)
+      }
+    }
+
+    fetchTotalEarnings()
+  }, [])
 
   return (
     <html lang='en'>
@@ -23,8 +46,9 @@ export default function RootLayout({
         <div className='min-h-screen bg-gray-50 flex-col'>
           <Header onMenuClick={() => setSidebarOpen(!sidebarOpen)} totalEarnings={totalEarnings} />
           <div className='flex flex-1'>
+            <Sidebar open={sidebarOpen} />
             <main className='flex-1 p-4 lg:p-8 ml-0 lg:ml-64 transition-all duration-300'>
-              {childern}
+              {children}
             </main>
           </div>
         </div>
