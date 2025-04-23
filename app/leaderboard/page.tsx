@@ -8,7 +8,7 @@ type Reward = {
     id: number
     userId: number
     points: number
-    level: number
+    level: number | null;
     createdAt: Date
     userName: string | null
 }
@@ -104,8 +104,11 @@ export default function LeaderboardPage() {
                                                 </div>
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap">
-                                                <span className="px-3 py-1 inline-flex text-sm leading-5 font-semibold rounded-full bg-indigo-100 text-indigo-800">
-                                                    Level {reward.level}
+                                                <span
+                                                    className={`px-3 py-1 inline-flex text-sm leading-5 font-semibold rounded-full ${reward.level === 1 ? 'bg-gray-200 text-gray-800' :
+                                                        reward.level === 2 ? 'bg-yellow-200 text-yellow-800' :
+                                                            'bg-teal-200 text-teal-800'}`}>
+                                                    {reward.level === 1 ? 'Silver' : reward.level === 2 ? 'Gold' : 'Diamond'}
                                                 </span>
                                             </td>
                                         </tr>

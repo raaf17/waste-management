@@ -104,15 +104,37 @@ export async function getOrCreateReward(userId: number) {
 
 export async function updateRewardPoints(userId: number, pointsToAdd: number) {
     try {
+        // Ambil data reward pengguna saat ini
+        const currentReward = await db
+            .select({ points: Rewards.points, level: Rewards.level })
+            .from(Rewards)
+            .where(eq(Rewards.userId, userId))
+            .execute();
+
+        if (!currentReward.length) {
+            throw new Error("User reward data not found");
+        }
+
+        const newPoints = currentReward[0].points + pointsToAdd;
+        let newLevel = currentReward[0].level;
+
+        if (newPoints >= 200) {
+            newLevel = 3;
+        } else if (newPoints >= 100) {
+            newLevel = 2;
+        }
+
         const [updatedReward] = await db
             .update(Rewards)
             .set({
-                points: sql`${Rewards.points} + ${pointsToAdd}`,
+                points: newPoints,
+                level: newLevel,
                 updatedAt: new Date()
             })
             .where(eq(Rewards.userId, userId))
             .returning()
             .execute();
+
         return updatedReward;
     } catch (error) {
         console.error("Error updating reward points:", error);
@@ -317,6 +339,7 @@ export async function getAllRewards() {
                 id: Rewards.id,
                 userId: Rewards.userId,
                 points: Rewards.points,
+                level: Rewards.level, // Bisa null
                 createdAt: Rewards.createdAt,
                 userName: Users.name,
             })
@@ -325,7 +348,11 @@ export async function getAllRewards() {
             .orderBy(desc(Rewards.points))
             .execute();
 
-        return rewards ?? []; // Pastikan tidak mengembalikan null/undefined
+        // Konversi level dari null ke 0
+        return rewards.map(reward => ({
+            ...reward,
+            level: reward.level ?? 0,
+        }));
     } catch (error) {
         console.error("Error fetching all rewards:", error);
         return [];

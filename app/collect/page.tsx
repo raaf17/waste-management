@@ -306,7 +306,7 @@ export default function CollectPage() {
 
             {selectedTask && (
                 <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-                    <div className="bg-white rounded-lg p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+                    <div className="bg-white rounded-lg p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto custom-scrollbar">
                         <h3 className="text-xl font-semibold mb-4">Verify Collection</h3>
                         <p className="mb-4 text-sm text-gray-600">Upload a photo of the collected waste to verify and earn your reward.</p>
                         <div className="mb-4">

@@ -232,7 +232,7 @@ export default function Header({ onMenuClick, totalEarnings }: HeaderProps) {
                                     <DropdownMenuItem key={notification.id} onClick={() => handleNotificationClick(notification.id)}>
                                         <div className='flex flex-col'>
                                             <span className='font-medium'>{notification.type}</span>
-                                            <span className='text-sm text-gray-500'>{notification.type}</span>
+                                            <span className='text-sm text-gray-500'>You get 10 points</span>
                                         </div>
                                     </DropdownMenuItem>
                                 ))

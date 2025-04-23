@@ -221,7 +221,6 @@ export default function RewardsPage() {
                                         <Button
                                             onClick={() => handleRedeemReward(reward.id)}
                                             className="w-full bg-green-500 hover:bg-green-600 text-white"
-                                            disabled={balance < reward.cost}
                                         >
                                             <Gift className="w-4 h-4 mr-2" />
                                             Redeem Reward
